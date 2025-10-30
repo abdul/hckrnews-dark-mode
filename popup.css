@@ -1,0 +1,91 @@
+body {
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    background: #1e1e1e;
+    color: #fff;
+    margin: 0;
+    min-width: 320px;
+}
+.popup-container {
+    padding: 18px 18px 12px 18px;
+    background: #181a1b;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.logo {
+       display: block;
+       margin: 0 auto 12px auto;
+       width: 48px;
+       height: 48px;
+   }
+
+.subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #fb923c;
+    margin-bottom: 16px;
+}
+label, select {
+    font-size: 15px;
+    margin: 10px 0;
+    display: block;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    background: #23272f;
+    color: #e4e4e7;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 14px;
+}
+.status-bar {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #b58900;
+    height: 18px;
+}
+
+
+.info-section {
+    font-size: 12.5px;
+    background: #24262f;
+    border-left: 4px solid #fb923c;
+    border-radius: 6px;
+    color: #bbb;
+    padding: 8px 12px;
+    margin-bottom: 18px;
+}
+.links {
+    margin: 12px 0 0 0;
+    text-align: center;
+}
+.links a {
+    color: #fb923c;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color .13s;
+    vertical-align: middle;
+}
+.links a:hover {
+    color: #ff8431;
+    text-decoration: underline;
+}
+.version {
+    color: #999;
+    font-size: 11px;
+    text-align: center;
+    margin-top: 12px;
+}
