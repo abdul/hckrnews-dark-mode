@@ -41,9 +41,9 @@ Persistent, beautiful dark mode for [hckrnews.com](https://hckrnews.com) with in
 ## Author
 
 **Abdul Qabiz**
-Website: [abdulqabiz.com](https://www.abdulqabiz.com)
-GitHub: [github.com/abdul](https://github.com/abdul)
-Extension Repo: [github.com/abdul/hckrnews-dark-mode](https://github.com/abdul/hckrnews-dark-mode)
+- Website: [abdulqabiz.com](https://www.abdulqabiz.com)
+- GitHub: [github.com/abdul](https://github.com/abdul)
+- Extension Repo: [github.com/abdul/hckrnews-dark-mode](https://github.com/abdul/hckrnews-dark-mode)
 
 ---
 
