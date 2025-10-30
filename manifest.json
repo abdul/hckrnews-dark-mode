@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "HckrNews Dark Mode",
+  "version": "1.0.0",
+  "author": "Abdul Qabiz",
+  "homepage_url": "https://github.com/abdul/hckrnews-dark-mode",
+  "description": "Add dark mode to hckrnews.com with a toggle button",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["*://hckrnews.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Toggle Dark Mode",
+    "default_icons": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://hckrnews.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ]
+}

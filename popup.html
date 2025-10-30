@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HckrNews Dark Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: #222;
+            color: #fff;
+            min-width: 320px;
+        }
+        .popup-container {
+            padding: 18px 18px 12px 18px;
+            background: #181a1b;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 12px auto;
+            width: 48px;
+            height: 48px;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #fb923c;
+            margin-bottom: 16px;
+        }
+        .toggle-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            background: linear-gradient(90deg,#fb923c,#f97316);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(251,146,60,0.11);
+            margin-bottom: 12px;
+            transition: background .2s, transform .14s;
+        }
+        .toggle-btn:hover {
+            background: #f97316;
+            transform: scale(1.03) translateY(-1px);
+        }
+        .status-bar {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .info-section {
+            font-size: 12.5px;
+            background: #24262f;
+            border-left: 4px solid #fb923c;
+            border-radius: 6px;
+            color: #bbb;
+            padding: 8px 12px;
+            margin-bottom: 18px;
+        }
+        .links {
+            margin: 12px 0 0 0;
+            text-align: center;
+        }
+        .links a {
+            color: #fb923c;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color .13s;
+            vertical-align: middle;
+        }
+        .links a:hover {
+            color: #ff8431;
+            text-decoration: underline;
+        }
+        .version {
+            color: #999;
+            font-size: 11px;
+            text-align: center;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="popup-container">
+    <img src="icon48.png" class="logo" alt="Logo" />
+    <h1>HckrNews<br>Dark Mode</h1>
+    <div class="subtitle">for hckrnews.com</div>
+    <button id="toggleBtn" class="toggle-btn">🌙 Enable Dark Mode</button>
+    <div class="status-bar" id="statusBar">Light mode active</div>
+    <div class="info-section">
+        💡 Your preference is saved automatically and will persist across sessions.
+    </div>
+    <div class="links">
+        <a href="https://abdulqabiz.com" target="_blank">Author</a>
+        <a href="https://github.com/abdul" target="_blank">GitHub</a>
+        <a href="https://github.com/abdul/hckrnews-dark-mode" target="_blank">Repo</a>
+    </div>
+    <div class="version">v1.0.0</div>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>
