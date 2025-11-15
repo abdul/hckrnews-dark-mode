@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load saved settings
     chrome.storage.sync.get(['theme', 'autoRefreshEnabled', 'refreshInterval'], function(result) {
+        if (chrome.runtime.lastError) {
+            console.error('Error loading settings:', chrome.runtime.lastError);
+            statusBar.textContent = 'Error loading settings';
+            return;
+        }
+
         if (result.theme) {
             themeSelect.value = result.theme;
             statusBar.textContent = `Theme: ${themeSelect.options[themeSelect.selectedIndex].text}`;
@@ -21,22 +27,67 @@ document.addEventListener('DOMContentLoaded', function() {
     // Apply theme on selection
     themeSelect.addEventListener('change', function() {
         const theme = themeSelect.value;
+        
+        if (!theme) {
+            statusBar.textContent = 'Invalid theme selected';
+            return;
+        }
+
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { action: 'setTheme', theme });
+            if (chrome.runtime.lastError) {
+                console.error('Error querying tabs:', chrome.runtime.lastError);
+                statusBar.textContent = 'Error applying theme';
+                return;
+            }
+
+            if (!tabs || tabs.length === 0) {
+                statusBar.textContent = 'No active tab found';
+                return;
+            }
+
+            chrome.tabs.sendMessage(tabs[0].id, { action: 'setTheme', theme }, function(response) {
+                if (chrome.runtime.lastError) {
+                    // Ignore error if tab doesn't have content script (e.g., not on hckrnews.com)
+                    console.log('Could not send message:', chrome.runtime.lastError.message);
+                }
+            });
+            
             statusBar.textContent = `Theme: ${themeSelect.options[themeSelect.selectedIndex].text}`;
-            chrome.storage.sync.set({ theme: theme });
+            
+            chrome.storage.sync.set({ theme: theme }, function() {
+                if (chrome.runtime.lastError) {
+                    console.error('Error saving theme:', chrome.runtime.lastError);
+                }
+            });
         });
     });
 
     // Handle auto-refresh toggle
     autoRefreshToggle.addEventListener('change', function() {
         const enabled = autoRefreshToggle.checked;
+        const interval = parseInt(refreshInterval.value, 10) || 60;
+
         chrome.storage.sync.set({ autoRefreshEnabled: enabled }, function() {
+            if (chrome.runtime.lastError) {
+                console.error('Error saving auto-refresh setting:', chrome.runtime.lastError);
+                refreshStatus.textContent = 'Error saving settings';
+                return;
+            }
+
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (chrome.runtime.lastError || !tabs || tabs.length === 0) {
+                    console.error('Error querying tabs:', chrome.runtime.lastError);
+                    return;
+                }
+
                 chrome.tabs.sendMessage(tabs[0].id, {
                     action: 'setAutoRefresh',
                     enabled: enabled,
-                    interval: parseInt(refreshInterval.value)
+                    interval: interval
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        console.log('Could not send message:', chrome.runtime.lastError.message);
+                    }
                 });
             });
             updateRefreshStatus();
@@ -45,7 +96,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle interval change
     refreshInterval.addEventListener('change', function() {
-        let interval = parseInt(refreshInterval.value);
+        let interval = parseInt(refreshInterval.value, 10);
+
+        // Validate input is a number
+        if (isNaN(interval)) {
+            interval = 60;
+            refreshInterval.value = 60;
+        }
 
         // Enforce min/max constraints
         if (interval < 5) {
@@ -57,11 +114,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         chrome.storage.sync.set({ refreshInterval: interval }, function() {
+            if (chrome.runtime.lastError) {
+                console.error('Error saving interval:', chrome.runtime.lastError);
+                refreshStatus.textContent = 'Error saving settings';
+                return;
+            }
+
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (chrome.runtime.lastError || !tabs || tabs.length === 0) {
+                    console.error('Error querying tabs:', chrome.runtime.lastError);
+                    return;
+                }
+
                 chrome.tabs.sendMessage(tabs[0].id, {
                     action: 'setAutoRefresh',
                     enabled: autoRefreshToggle.checked,
                     interval: interval
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        console.log('Could not send message:', chrome.runtime.lastError.message);
+                    }
                 });
             });
             updateRefreshStatus();

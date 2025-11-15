@@ -24,7 +24,7 @@
                 background: var(--bg-primary) !important; 
                 color: var(--text-primary) !important;
             }
-            body.dark-mode a:link { 
+            body.dark-mode a { 
                 color: var(--link) !important;
                 transition: color 0.2s ease, text-decoration 0.2s ease;
             }
@@ -37,6 +37,9 @@
             }
             body.dark-mode a:active { 
                 color: var(--accent) !important;
+            }
+            body.dark-mode a:visited:hover {
+                color: var(--hover-nav-text) !important;
             }
             body.dark-mode .selected,
             body.dark-mode .active,
@@ -71,13 +74,21 @@
     }
 
     function injectThemeCSS(themeName) {
+        // Validate theme name to prevent injection
+        if (!themeName || typeof themeName !== 'string') {
+            themeName = 'default';
+        }
+        
+        // Only use themes from our predefined list
+        const safeTheme = themes.hasOwnProperty(themeName) ? themes[themeName] : themes['default'];
+        
         let styleTag = document.getElementById('hckr-dark-mode-style');
         if (!styleTag) {
             styleTag = document.createElement('style');
             styleTag.id = 'hckr-dark-mode-style';
             document.documentElement.appendChild(styleTag);
         }
-        styleTag.innerHTML = (themes[themeName] || themes['default']) + getBaseCss();
+        styleTag.textContent = safeTheme + getBaseCss();
     }
 
     function injectToggleButtonCSS() {
@@ -117,7 +128,11 @@
                 e.preventDefault();
                 darkModeEnabled = !darkModeEnabled;
                 applyDarkMode(darkModeEnabled);
-                chrome.storage.sync.set({ darkModeEnabled: darkModeEnabled });
+                chrome.storage.sync.set({ darkModeEnabled: darkModeEnabled }, function() {
+                    if (chrome.runtime.lastError) {
+                        console.error('Error saving dark mode state:', chrome.runtime.lastError);
+                    }
+                });
             });
         }
         btn.textContent = enabled ? '☀️ Light Mode' : '🌙 Dark Mode';
@@ -125,18 +140,41 @@
 
     // Initial load
     chrome.storage.sync.get(['theme', 'darkModeEnabled'], function(result) {
-        currentTheme = result.theme || 'default';
-        darkModeEnabled = result.darkModeEnabled !== undefined ? result.darkModeEnabled : true;
+        if (chrome.runtime.lastError) {
+            console.error('Error loading settings:', chrome.runtime.lastError);
+            // Use defaults on error
+            currentTheme = 'default';
+            darkModeEnabled = true;
+        } else {
+            // Validate theme exists
+            currentTheme = (result.theme && themes.hasOwnProperty(result.theme)) ? result.theme : 'default';
+            darkModeEnabled = result.darkModeEnabled !== undefined ? result.darkModeEnabled : true;
+        }
         applyDarkMode(darkModeEnabled);
     });
 
     // Listen for theme change messages
-    chrome.runtime.onMessage.addListener(function(request) {
-        if (request.action === 'setTheme' && request.theme) {
-            currentTheme = request.theme;
-            chrome.storage.sync.set({ theme: currentTheme });
-            if (document.body.classList.contains('dark-mode')) injectThemeCSS(currentTheme);
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        // Validate request object
+        if (!request || typeof request !== 'object') {
+            return;
         }
+
+        if (request.action === 'setTheme' && request.theme) {
+            // Validate theme exists in our themes object
+            if (themes.hasOwnProperty(request.theme)) {
+                currentTheme = request.theme;
+                chrome.storage.sync.set({ theme: currentTheme }, function() {
+                    if (chrome.runtime.lastError) {
+                        console.error('Error saving theme:', chrome.runtime.lastError);
+                    }
+                });
+                if (document.body.classList.contains('dark-mode')) {
+                    injectThemeCSS(currentTheme);
+                }
+            }
+        }
+        
         if (request.action === 'setAutoRefresh') {
             updateAutoRefresh(request.enabled, request.interval);
         }
@@ -152,16 +190,23 @@
             autoRefreshTimer = null;
         }
 
-        if (enabled && intervalSeconds >= 5) {
+        // Validate interval: min 5 seconds, max 1 hour (3600 seconds)
+        const validInterval = Math.max(5, Math.min(3600, parseInt(intervalSeconds, 10) || 60));
+
+        if (enabled && !isNaN(validInterval)) {
             // Set up new timer
             autoRefreshTimer = setInterval(function() {
                 location.reload();
-            }, intervalSeconds * 1000);
+            }, validInterval * 1000);
         }
     }
 
     // Initialize auto-refresh on page load
     chrome.storage.sync.get(['autoRefreshEnabled', 'refreshInterval'], function(result) {
+        if (chrome.runtime.lastError) {
+            console.error('Error loading auto-refresh settings:', chrome.runtime.lastError);
+            return;
+        }
         if (result.autoRefreshEnabled && result.refreshInterval) {
             updateAutoRefresh(true, result.refreshInterval);
         }

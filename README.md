@@ -39,6 +39,8 @@ All themes feature:
 - ✅ Accessible hover states without jarring brightness
 - ✅ Colorblind-friendly palettes
 
+**Want to create your own theme?** See [CUSTOM_THEMES.md](CUSTOM_THEMES.md) for a complete guide!
+
 ---
 
 ## 📦 Installation
@@ -152,35 +154,23 @@ Contributions are welcome! Here's how:
 6. **Open a Pull Request**
 
 ### Adding a New Theme
-To add a new theme, edit `content.js`:
 
-```javascript
-themeName: `:root { 
-  --bg-primary: #yourBg; 
-  --bg-secondary: #yourSecondaryBg; 
-  --text-primary: #yourText; 
-  --accent: #yourAccent; 
-  --link: #yourLink; 
-  --visited: #yourVisited; 
-  --selected-nav-text: #yourNavText; 
-  --selected-nav-border: #yourNavBorder; 
-  --hover-nav-text: #yourHoverText; 
-}`,
-```
+For detailed instructions on creating custom themes, see **[CUSTOM_THEMES.md](CUSTOM_THEMES.md)**
 
-Then add it to the dropdown in `popup.html`:
-```html
-<option value="themeName">Theme Display Name</option>
-```
+Quick overview:
 
-**Important**: Verify color contrast ratios meet WCAG AA standards!
+1. Add your theme to the `themes` object in `content.js`
+2. Add it to the dropdown in `popup.html`
+3. Verify WCAG AA compliance using [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+
+**Important**: All themes must meet WCAG AA accessibility standards!
 
 ---
 
 ## 👨‍💻 Author
 
 **Abdul Qabiz**
-- Website: [abdulqabiz.com](https://abdulqabiz.com)
+- Website: [abdulqabiz.com](https://www.abdulqabiz.com)
 - GitHub: [@abdul](https://github.com/abdul)
 - Repository: [hckrnews-dark-mode](https://github.com/abdul/hckrnews-dark-mode)
 
