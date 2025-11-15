@@ -9,7 +9,8 @@ A beautiful, accessible dark mode extension for [hckrnews.com](https://hckrnews.
 - **13 Premium Themes** - Choose from carefully curated code editor-inspired color schemes
 - **WCAG AA Compliant** - All themes meet accessibility standards with proper contrast ratios
 - **Instant Toggle** - Switch dark mode on/off via popup or in-page button
-- **Persistent Settings** - Your theme and mode preference saved across sessions
+- **Auto-Refresh** - Automatically refresh the page at customizable intervals (5-3600 seconds)
+- **Persistent Settings** - Your theme, mode preference, and refresh settings saved across sessions
 - **Clean Navigation** - Subtle, modern styling for navigation links (top 10, top 20, etc.)
 - **Lightweight & Fast** - No tracking, no analytics, no nonsense
 - **Open Source** - Fully customizable and transparent
@@ -68,6 +69,15 @@ All themes feature:
   - 🌙 Dark Mode - Activate dark mode
   - ☀️ Light Mode - Return to original light theme
 
+### Auto-Refresh Settings
+1. Click the extension icon in your Chrome toolbar
+2. Check **Enable Auto Refresh** to turn on automatic page refreshing
+3. Set **Interval (seconds)** to your desired refresh frequency
+   - Minimum: 5 seconds
+   - Maximum: 3600 seconds (1 hour)
+   - Default: 60 seconds
+4. Settings apply immediately and save automatically
+
 Your preferences persist across:
 - ✅ Browser sessions
 - ✅ Multiple tabs
@@ -92,7 +102,7 @@ Your preferences persist across:
 ```
 hckrnews-dark-mode/
 ├── manifest.json       # Extension configuration
-├── content.js          # Main script with themes and logic
+├── content.js          # Main script with themes, logic, and auto-refresh
 ├── popup.html          # Extension popup interface
 ├── popup.js            # Popup functionality
 ├── popup.css           # Popup styling
@@ -105,9 +115,10 @@ hckrnews-dark-mode/
 ### How It Works
 1. Content script injects theme-specific CSS variables
 2. Toggle button and popup communicate via Chrome storage API
-3. Theme preference stored in `chrome.storage.sync`
+3. Theme and auto-refresh preferences stored in `chrome.storage.sync`
 4. CSS applied dynamically based on selected theme
 5. Navigation elements styled with accessible underlines
+6. Auto-refresh uses `setInterval` to reload page at specified intervals
 
 ---
 

@@ -89,3 +89,61 @@ select {
     text-align: center;
     margin-top: 12px;
 }
+
+.refresh-controls {
+    margin: 16px 0;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.toggle-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #fb923c;
+}
+
+.toggle-label span {
+    user-select: none;
+}
+
+.interval-control {
+    margin-bottom: 12px;
+}
+
+.interval-control label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.interval-control input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    background: #23272f;
+    color: #e4e4e7;
+    font-size: 16px;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+.interval-control input[type="number"]:focus {
+    outline: 2px solid #fb923c;
+}
+
+.refresh-status {
+    text-align: center;
+    font-size: 13px;
+    color: #fb923c;
+    height: 18px;
+    margin-top: 8px;
+}

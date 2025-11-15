@@ -30,8 +30,26 @@
             <option value="monokaiPro">Monokai Pro</option>
         </select>
         <div class="status-bar" id="statusBar"></div>
+
+    <h1>Auto Refresh</h1>
+    <div class="subtitle">Automatically refresh the page</div>
+
+    <div class="refresh-controls">
+        <label class="toggle-label">
+            <input type="checkbox" id="autoRefreshToggle">
+            <span>Enable Auto Refresh</span>
+        </label>
+
+        <div class="interval-control">
+            <label for="refreshInterval">Interval (seconds):</label>
+            <input type="number" id="refreshInterval" min="5" max="3600" value="60" step="5">
+        </div>
+
+        <div class="refresh-status" id="refreshStatus"></div>
+    </div>
+
     <div class="info-section">
-        💡 Your preference is saved automatically and will persist across sessions.
+        💡 Your preferences are saved automatically and will persist across sessions.
     </div>
     <div class="links">
         <a href="https://abdulqabiz.com" target="_blank">Author</a>

@@ -20,9 +20,24 @@
 
     function getBaseCss() {
         return `
-            body.dark-mode { background: var(--bg-primary) !important; color: var(--text-primary) !important;}
-            body.dark-mode a { color: var(--link) !important;}
-            body.dark-mode a:visited { color: var(--visited) !important;}
+            body.dark-mode { 
+                background: var(--bg-primary) !important; 
+                color: var(--text-primary) !important;
+            }
+            body.dark-mode a:link { 
+                color: var(--link) !important;
+                transition: color 0.2s ease, text-decoration 0.2s ease;
+            }
+            body.dark-mode a:visited { 
+                color: var(--visited) !important;
+            }
+            body.dark-mode a:hover { 
+                color: var(--hover-nav-text) !important;
+                text-decoration: underline;
+            }
+            body.dark-mode a:active { 
+                color: var(--accent) !important;
+            }
             body.dark-mode .selected,
             body.dark-mode .active,
             body.dark-mode a[aria-current="page"],
@@ -121,6 +136,34 @@
             currentTheme = request.theme;
             chrome.storage.sync.set({ theme: currentTheme });
             if (document.body.classList.contains('dark-mode')) injectThemeCSS(currentTheme);
+        }
+        if (request.action === 'setAutoRefresh') {
+            updateAutoRefresh(request.enabled, request.interval);
+        }
+    });
+
+    // Auto-refresh functionality
+    let autoRefreshTimer = null;
+
+    function updateAutoRefresh(enabled, intervalSeconds) {
+        // Clear existing timer
+        if (autoRefreshTimer) {
+            clearInterval(autoRefreshTimer);
+            autoRefreshTimer = null;
+        }
+
+        if (enabled && intervalSeconds >= 5) {
+            // Set up new timer
+            autoRefreshTimer = setInterval(function() {
+                location.reload();
+            }, intervalSeconds * 1000);
+        }
+    }
+
+    // Initialize auto-refresh on page load
+    chrome.storage.sync.get(['autoRefreshEnabled', 'refreshInterval'], function(result) {
+        if (result.autoRefreshEnabled && result.refreshInterval) {
+            updateAutoRefresh(true, result.refreshInterval);
         }
     });
 
