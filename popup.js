@@ -4,9 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const autoRefreshToggle = document.getElementById('autoRefreshToggle');
     const refreshInterval = document.getElementById('refreshInterval');
     const refreshStatus = document.getElementById('refreshStatus');
+    const linkPreviewToggle = document.getElementById('linkPreviewToggle');
+    const previewStatus = document.getElementById('previewStatus');
 
     // Load saved settings
-    chrome.storage.sync.get(['theme', 'autoRefreshEnabled', 'refreshInterval'], function(result) {
+    chrome.storage.sync.get(['theme', 'autoRefreshEnabled', 'refreshInterval', 'linkPreviewEnabled'], function(result) {
         if (chrome.runtime.lastError) {
             console.error('Error loading settings:', chrome.runtime.lastError);
             statusBar.textContent = 'Error loading settings';
@@ -18,10 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBar.textContent = `Theme: ${themeSelect.options[themeSelect.selectedIndex].text}`;
         }
 
-        // Load auto-refresh settings
         autoRefreshToggle.checked = result.autoRefreshEnabled || false;
         refreshInterval.value = result.refreshInterval || 60;
         updateRefreshStatus();
+
+        linkPreviewToggle.checked = result.linkPreviewEnabled || false;
+        updatePreviewStatus(result.linkPreviewEnabled || false);
     });
 
     // Apply theme on selection
@@ -139,6 +143,37 @@ document.addEventListener('DOMContentLoaded', function() {
             updateRefreshStatus();
         });
     });
+
+    // Handle link preview toggle
+    linkPreviewToggle.addEventListener('change', function() {
+        const enabled = linkPreviewToggle.checked;
+        chrome.storage.sync.set({ linkPreviewEnabled: enabled }, function() {
+            if (chrome.runtime.lastError) {
+                console.error('Error saving link preview setting:', chrome.runtime.lastError);
+                return;
+            }
+            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                if (chrome.runtime.lastError || !tabs || tabs.length === 0) return;
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: 'setLinkPreview',
+                    enabled: enabled
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        console.log('Could not send message:', chrome.runtime.lastError.message);
+                    }
+                });
+            });
+            updatePreviewStatus(enabled);
+        });
+    });
+
+    function updatePreviewStatus(enabled) {
+        if (previewStatus) {
+            previewStatus.textContent = enabled
+                ? 'Hover links to preview — click 📌 to pin as side panel'
+                : 'Preview disabled';
+        }
+    }
 
     function updateRefreshStatus() {
         if (autoRefreshToggle.checked) {

@@ -3,10 +3,11 @@ body {
     background: #1e1e1e;
     color: #fff;
     margin: 0;
-    min-width: 320px;
+    min-width: min(480px, 90vw);
+    width: min(480px, 90vw);
 }
 .popup-container {
-    padding: 18px 18px 12px 18px;
+    padding: 18px 20px 12px 20px;
     background: #181a1b;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.18);
