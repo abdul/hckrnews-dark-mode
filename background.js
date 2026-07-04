@@ -9,8 +9,9 @@ const PRIVATE_IP_RE = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|169\.25
 const BLOCKED_HOSTNAMES = new Set(['localhost', 'broadcasthost', 'ip6-localhost', 'ip6-loopback']);
 
 function isPrivateHost(hostname) {
-    if (BLOCKED_HOSTNAMES.has(hostname.toLowerCase())) return true;
-    if (PRIVATE_IP_RE.test(hostname)) return true;
+    const normalizedHost = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    if (BLOCKED_HOSTNAMES.has(normalizedHost)) return true;
+    if (PRIVATE_IP_RE.test(normalizedHost)) return true;
     return false;
 }
 
