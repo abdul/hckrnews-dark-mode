@@ -3,8 +3,7 @@ body {
     background: #1e1e1e;
     color: #fff;
     margin: 0;
-    min-width: min(480px, 90vw);
-    width: min(480px, 90vw);
+    min-width: 320px;
 }
 .popup-container {
     padding: 18px 20px 12px 20px;
