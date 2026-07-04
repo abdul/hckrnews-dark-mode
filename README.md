@@ -1,6 +1,6 @@
 # 🌙 HckrNews Dark Mode Chrome Extension
 
-A beautiful, accessible dark mode extension for [hckrnews.com](https://hckrnews.com) with **13 customizable themes**, WCAG-compliant colors, and instant toggling!
+A beautiful, accessible dark mode extension for [hckrnews.com](https://hckrnews.com) with **13 customizable themes**, link previews, WCAG-compliant colors, and instant toggling!
 
 ---
 
@@ -10,7 +10,8 @@ A beautiful, accessible dark mode extension for [hckrnews.com](https://hckrnews.
 - **WCAG AA Compliant** - All themes meet accessibility standards with proper contrast ratios
 - **Instant Toggle** - Switch dark mode on/off via popup or in-page button
 - **Auto-Refresh** - Automatically refresh the page at customizable intervals (5-3600 seconds)
-- **Persistent Settings** - Your theme, mode preference, and refresh settings saved across sessions
+- **Persistent Settings** - Your theme, mode preference, refresh settings, and link preview preference saved across sessions
+- **Link Preview** - Preview article links on hover, then pin previews as an inline side panel
 - **Clean Navigation** - Subtle, modern styling for navigation links (top 10, top 20, etc.)
 - **Lightweight & Fast** - No tracking, no analytics, no nonsense
 - **Open Source** - Fully customizable and transparent
@@ -80,6 +81,12 @@ All themes feature:
    - Default: 60 seconds
 4. Settings apply immediately and save automatically
 
+### Link Preview Settings
+1. Click the extension icon in your Chrome toolbar
+2. Check **Enable Link Preview on Hover**
+3. Hover article links on [hckrnews.com](https://hckrnews.com) to preview article metadata and readable text
+4. Click the pin action in a preview to keep it open in the side panel
+
 Your preferences persist across:
 - ✅ Browser sessions
 - ✅ Multiple tabs
@@ -101,26 +108,34 @@ Your preferences persist across:
 ## 🛠️ Technical Details
 
 ### Files Structure
-```
+```text
 hckrnews-dark-mode/
-├── manifest.json       # Extension configuration
-├── content.js          # Main script with themes, logic, and auto-refresh
-├── popup.html          # Extension popup interface
-├── popup.js            # Popup functionality
-├── popup.css           # Popup styling
-├── icon16.png          # Extension icon (16px)
-├── icon48.png          # Extension icon (48px)
-├── icon128.png         # Extension icon (128px)
-└── README.md           # This file
+├── manifest.json                  # Extension configuration
+├── background.js                  # Link preview fetcher and article parser
+├── content.js                     # Themes, dark mode, auto-refresh, and link previews
+├── popup.html                     # Extension popup interface
+├── popup.js                       # Popup functionality
+├── popup.css                      # Popup styling
+├── tests/
+│   ├── extension-contracts.test.js # Manifest, popup, content, and preview contracts
+│   └── popup-layout.test.js        # Popup width regression coverage
+├── icon16.png                     # Extension icon (16px)
+├── icon48.png                     # Extension icon (48px)
+├── icon128.png                    # Extension icon (128px)
+├── CUSTOM_THEMES.md               # Theme creation guide
+└── README.md                      # This file
 ```
 
 ### How It Works
 1. Content script injects theme-specific CSS variables
 2. Toggle button and popup communicate via Chrome storage API
-3. Theme and auto-refresh preferences stored in `chrome.storage.sync`
-4. CSS applied dynamically based on selected theme
-5. Navigation elements styled with accessible underlines
-6. Auto-refresh uses `setInterval` to reload page at specified intervals
+3. Theme, dark mode, auto-refresh, and link preview preferences are stored in `chrome.storage.sync`
+4. CSS applies dynamically based on the selected theme
+5. Navigation elements use accessible selected and hover states
+6. Auto-refresh uses `setInterval` to reload the page at the configured interval
+7. Link preview attaches hover handlers to article links
+8. Background service worker fetches and parses preview metadata
+9. Preview fetches block invalid, non-HTTP, private, and local URLs before network access
 
 ---
 
@@ -143,15 +158,22 @@ Contributions are welcome! Here's how:
    - Add new themes to the `themes` object in `content.js`
    - Ensure WCAG AA compliance (use [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/))
    - Update theme dropdown in `popup.html`
-4. **Commit your changes**
+4. **Run checks**
+   ```bash
+   node --test
+   node --check content.js
+   node --check popup.js
+   node --check background.js
+   ```
+5. **Commit your changes**
    ```bash
    git commit -m 'Add amazing feature'
    ```
-5. **Push to your fork**
+6. **Push to your fork**
    ```bash
    git push origin feature/amazing-feature
    ```
-6. **Open a Pull Request**
+7. **Open a Pull Request**
 
 ### Adding a New Theme
 
